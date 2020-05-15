@@ -4,6 +4,8 @@ import { Collections } from "../../components/Collections";
 import { Collections as CollectionsVariantZ } from "./variantZ/Collections";
 import { Collections as CollectionsVariantC } from "./variantC/Collections";
 import { Collections as CollectionsVariantB } from "./variantB/Collections";
+import { Collections as CollectionsVariantM } from "./variantM/Collections";
+import { render } from "mjml-react";
 
 export const MediaBriefing: React.FC<{
     frontId: string;
@@ -33,6 +35,17 @@ export const MediaBriefing: React.FC<{
                 collections={collections}
             ></CollectionsVariantB>
         );
+    } else if (variant === "m") {
+        const { html } = render(
+            <CollectionsVariantM
+                frontId={frontId}
+                collections={collections}
+            ></CollectionsVariantM>,
+            { validationLevel: "soft" }
+        );
+
+        // TODO: move this up to Email compoennt when we've deleted all other variants
+        return <div dangerouslySetInnerHTML={{ __html: html }}></div>;
     }
 
     return (
