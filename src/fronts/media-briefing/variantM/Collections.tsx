@@ -22,29 +22,49 @@ export const Collections: React.FC<{
     frontId: string;
     collections: ICollection[];
 }> = ({ collections }) => {
+    const renderedCollections = collections.map((collection) => {
+        const designType = getDesignType(collection);
+
+        switch (designType) {
+            case "comment":
+                // Ignore 'Media by Sector' collection without using 'display name'
+                // Look at combination of content type (curated/backfill),
+                // content length and collection type
+                // if (
+                //     collection.curated.length === 1 &&
+                //     collection.collectionType === "free-text"
+                // ) {
+                //     return null;
+                // }
+
+                // return <CommentCollection collection={collection} />;
+
+                return null;
+            case "link":
+                // return <LinkCollection collection={collection} />;
+                return null;
+            case "default":
+                // Render different collection for 'TV & Radio' collection without using 'display name'
+                // Look at 'tv-and-radio' substring in href
+                if (
+                    collection.href &&
+                    collection.href.indexOf("tv-and-radio") > -1
+                ) {
+                    return <DefaultCollection collection={collection} />;
+                }
+
+                return <TopCollection collection={collection} />;
+        }
+    });
+
     return (
         <Mjml>
             <MjmlHead>
                 <MjmlTitle>Last Minute Offer</MjmlTitle>
                 <MjmlPreview>Last Minute Offer...</MjmlPreview>
             </MjmlHead>
-            <MjmlBody width={500}>
-                <MjmlSection fullWidth backgroundColor="#efefef">
-                    <MjmlColumn>
-                        <MjmlImage src="https://static.wixstatic.com/media/5cb24728abef45dabebe7edc1d97ddd2.jpg" />
-                    </MjmlColumn>
-                </MjmlSection>
-                <MjmlSection>
-                    <MjmlColumn>
-                        <MjmlButton
-                            padding="20px"
-                            backgroundColor="#346DB7"
-                            href="https://www.wix.com/"
-                        >
-                            I like it!
-                        </MjmlButton>
-                    </MjmlColumn>
-                </MjmlSection>
+            <MjmlBody width={600}>
+                <MjmlSection fullWidth>{renderedCollections}</MjmlSection>
             </MjmlBody>
         </Mjml>
     );
